@@ -19,9 +19,21 @@ const STATUS_DISPLAY = document.querySelector(".game-notification"),
 // ============================== VARIABLES ================================ //
 
 let gameActive = true,
-    currentPlayer = "O";
+    currentPlayer = "O",
+    currentPlayerFirstTurn = "";
 
-// ============================== FUNCIONES ================================ //
+    // ============================== FUNCIONES ================================ //
+
+function reglas() {
+    alert(
+        'El primer jugador coloca la ficha en cualquiera de los casilleros'
+        + ' del tablero. El segundo hará lo mismo con su primera ficha. Se'
+        + ' continúa las otras jugadas respetando los turnos, si el jugador'
+        + ' consigue alinear tres marcas del mismo tipo, ese jugador hace'
+        + ' TA-TE-TI. El jugador ganador obtiene el primer turno en la'
+        + ' siguiente ronda.'
+    )
+}
 
 function main() {
     handleStatusDisplay(CURRENT_PLAYER_TURN());
@@ -39,7 +51,13 @@ function handleStatusDisplay(message) {
 
 function handleRestartGame() {
     gameActive = true;
-    currentPlayer = "X";
+
+    if (currentPlayerFirstTurn !== '') {
+        currentPlayer = currentPlayerFirstTurn;
+    } else {
+        currentPlayer = currentPlayer === 'O' ? 'X' : 'O';
+    }
+
     restartGameState();
     handleStatusDisplay(CURRENT_PLAYER_TURN());
     document.querySelectorAll('.game-cell').forEach(cell => cell.innerHTML = "");
@@ -88,6 +106,7 @@ function handleResultValidation() {
     if (roundWon) {
         handleStatusDisplay(WIN_MESSAGE());
         gameActive = false;
+        currentPlayerFirstTurn = currentPlayer;
         return;
     }
 
